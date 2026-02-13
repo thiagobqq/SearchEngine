@@ -3,16 +3,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WebCrawler.Domain.Interfaces.Repositories;
 
 namespace WebCrawler.Domain.Worker
 {
     public class QueueConsumer : BackgroundService
     {
         private readonly ILogger<QueueConsumer> _logger;
+        private readonly IPageRepository   _pageRepository;
 
-        public QueueConsumer(ILogger<QueueConsumer> logger)
+        public QueueConsumer(ILogger<QueueConsumer> logger, IPageRepository pageRepository)
         {
             _logger = logger;
+            _pageRepository = pageRepository;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,11 +29,10 @@ namespace WebCrawler.Domain.Worker
                     var url = WebCrawler.SPIDER_MANAGER.DequeueUrl();
                     
                     if (url != null)
-                    {
-                        _logger.LogInformation("Processing URL: {Url}", url);
-                        WebCrawler.SPIDER_MANAGER.MarkUrlAsVisited(url);
-                        
-                        WebCrawler.SCRAPPER_MANAGER.DownloadManager.DownloadPageAsync(url).Wait();
+                    {                        
+                        var page = await WebCrawler.CRAWLER_MANAGER.ProcessPage(url);
+                        WebCrawler.SPIDER_MANAGER.MarkUrlAsVisited(page.Url);
+                        await _pageRepository.SavePageAsync(page);                       
                     }
                 }
 
