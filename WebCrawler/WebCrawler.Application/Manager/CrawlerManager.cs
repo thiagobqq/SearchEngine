@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using WebCrawler.Domain.DTO;
 
-namespace WebCrawler.Domain.Manager
+namespace WebCrawler.Application.Manager
 {
     public class CrawlerManager
     {
 
-
-        public void AddUrlToScrape(string url)
+        public void AddUrlToScrape(string url, bool isVisited)
         {
-            WebCrawler.SPIDER_MANAGER.EnqueueUrl(url);
+            WebCrawler.SPIDER_MANAGER.EnqueueUrl(url, isVisited);
         }
 
         public async Task<PageDTO> ProcessPage(string url)

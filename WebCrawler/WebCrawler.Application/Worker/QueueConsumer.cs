@@ -5,12 +5,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebCrawler.Domain.Interfaces.Repositories;
 
-namespace WebCrawler.Domain.Worker
+namespace WebCrawler.Application.Worker
 {
     public class QueueConsumer : BackgroundService
     {
         private readonly ILogger<QueueConsumer> _logger;
-        private readonly IPageRepository   _pageRepository;
+        private readonly IPageRepository   _pageRepository;       
 
         public QueueConsumer(ILogger<QueueConsumer> logger, IPageRepository pageRepository)
         {
@@ -31,7 +31,6 @@ namespace WebCrawler.Domain.Worker
                     if (url != null)
                     {                        
                         var page = await WebCrawler.CRAWLER_MANAGER.ProcessPage(url);
-                        WebCrawler.SPIDER_MANAGER.MarkUrlAsVisited(page.Url);
                         await _pageRepository.SavePageAsync(page);                       
                     }
                 }

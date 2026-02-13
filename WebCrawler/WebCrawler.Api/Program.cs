@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebCrawler.Api;
 using WebCrawler.Domain.Interfaces.Repositories;
-using WebCrawler.Domain.Worker;
+using WebCrawler.Application.Worker;
 using WebCrawler.Infra.Data;
 using WebCrawler.Infra.Repositories;
 

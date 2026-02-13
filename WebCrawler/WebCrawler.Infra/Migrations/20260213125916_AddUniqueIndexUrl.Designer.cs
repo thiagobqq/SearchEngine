@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCrawler.Infra.Data;
 
@@ -10,9 +11,11 @@ using WebCrawler.Infra.Data;
 namespace WebCrawler.Infra.Migrations
 {
     [DbContext(typeof(WebCrawlerDbContext))]
-    partial class WebCrawlerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260213125916_AddUniqueIndexUrl")]
+    partial class AddUniqueIndexUrl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

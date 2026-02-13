@@ -20,7 +20,7 @@ namespace WebCrawler.Infra.Data
             modelBuilder.Entity<Page>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Url).IsRequired().HasMaxLength(2048);
+                entity.HasIndex(e => e.Url).IsUnique();
                 entity.Property(e => e.Title).HasMaxLength(500);
                 entity.Property(e => e.Content).HasColumnType("nvarchar(max)");
             });

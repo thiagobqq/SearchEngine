@@ -2,32 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebCrawler.Domain.Interfaces.Repositories;
 
-namespace WebCrawler.Domain.Manager
+namespace WebCrawler.Application.Manager
 {
     public class SpiderManager
     {
-        private Queue<string> _urlQueue;
-        private HashSet<string> _visitedUrls;
+        private readonly Queue<string> _urlQueue;
 
         public SpiderManager()
         {
             _urlQueue = new Queue<string>();
-            _visitedUrls = new HashSet<string>();
+        }
+
+        public void EnqueueUrl(string url, bool isVisited)
+        {
+            if (isVisited)
+            {   
+                Console.WriteLine($"Pagina já visitada: {url}");    
+                return;           
+            }
+            _urlQueue.Enqueue(url);            
         }
 
         public void EnqueueUrl(string url)
         {
-            if (!_visitedUrls.Contains(url))
-            {
-                _urlQueue.Enqueue(url);
-            }
+           this.EnqueueUrl(url, false);
         }
 
-        public void MarkUrlAsVisited(string url)
-        {
-            _visitedUrls.Add(url);
-        }
 
         public string? DequeueUrl()
         {

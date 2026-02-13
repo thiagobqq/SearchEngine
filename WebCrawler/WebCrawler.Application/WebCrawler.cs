@@ -1,6 +1,10 @@
-using WebCrawler.Domain.Manager;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using WebCrawler.Application.Manager;
 
-namespace WebCrawler.Domain
+namespace WebCrawler.Application
 {
     public static class WebCrawler
     {

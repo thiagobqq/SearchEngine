@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebCrawler.Domain.DTO;
 using WebCrawler.Domain.Interfaces.Repositories;
 using WebCrawler.Domain.Models;
@@ -25,6 +26,11 @@ namespace WebCrawler.Infra.Repositories
 
             _context.Pages.Add(pageEntity);
             return _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsPageAlreadyVisited(string url)
+        {
+            return await _context.Pages.AnyAsync(p => p.Url == url);
         }
         
     }

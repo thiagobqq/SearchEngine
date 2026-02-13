@@ -9,5 +9,6 @@ namespace WebCrawler.Domain.Interfaces.Repositories
     public interface IPageRepository
     {
         Task SavePageAsync(PageDTO page);
+        Task<bool> IsPageAlreadyVisited(string url);
     }
 }
