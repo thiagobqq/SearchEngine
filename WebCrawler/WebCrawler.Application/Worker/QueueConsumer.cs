@@ -30,6 +30,7 @@ namespace WebCrawler.Application.Worker
                     
                     if (url != null)
                     {                        
+                        _logger.LogInformation("Processando URL: {Url}", url);
                         var page = await WebCrawler.CRAWLER_MANAGER.ProcessPage(url);
                         await _pageRepository.SavePageAsync(page);                       
                     }

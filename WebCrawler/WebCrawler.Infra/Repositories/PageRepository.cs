@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using WebCrawler.Domain.DTO;
 using WebCrawler.Domain.Interfaces.Repositories;
@@ -15,8 +16,11 @@ namespace WebCrawler.Infra.Repositories
         private readonly WebCrawlerDbContext _context;
         public PageRepository(WebCrawlerDbContext context) => _context = context;
         
-        public Task SavePageAsync(PageDTO page)
+        public async Task SavePageAsync(PageDTO page)
         {
+            if (await _context.Pages.AnyAsync(p => p.Url == page.Url))
+                return;
+
             var pageEntity = new Page
             {
                 Url = page.Url,
@@ -25,7 +29,17 @@ namespace WebCrawler.Infra.Repositories
             };
 
             _context.Pages.Add(pageEntity);
-            return _context.SaveChangesAsync();
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx && (sqlEx.Number == 2601 || sqlEx.Number == 2627))                
+                    return;               
+                throw;
+            }
         }
 
         public async Task<bool> IsPageAlreadyVisited(string url)

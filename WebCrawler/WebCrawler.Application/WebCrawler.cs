@@ -13,11 +13,7 @@ namespace WebCrawler.Application
 
         static WebCrawler()
         {
-            SPIDER_MANAGER.EnqueueUrl("https://html-agility-pack.net/");
-            SPIDER_MANAGER.EnqueueUrl("https://github.com/thiagobqq/chat-irl");
-            SPIDER_MANAGER.EnqueueUrl("https://www.nuget.org/packages/HtmlAgilityPack/");
-            SPIDER_MANAGER.EnqueueUrl("https://www.google.com/");
-            SPIDER_MANAGER.EnqueueUrl("https://pt.wikipedia.org/wiki/L%C3%A1zaro_Barbosa_de_Sousa");
+            SPIDER_MANAGER.EnqueueUrl("https://pt.wikipedia.org/wiki/Ovo");
         }
     }
 }

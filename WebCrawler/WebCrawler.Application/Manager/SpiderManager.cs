@@ -46,6 +46,16 @@ namespace WebCrawler.Application.Manager
             return _urlQueue.Count > 0;
         }
 
+        public int GetQueueCount()
+        {
+            return _urlQueue.Count;
+        }
+
+        public string ListUrls()
+        {
+            return string.Join(Environment.NewLine, _urlQueue);
+        }
+
 
         
     }
