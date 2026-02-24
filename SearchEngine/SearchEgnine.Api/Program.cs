@@ -1,27 +1,21 @@
 using Microsoft.EntityFrameworkCore;
-using WebCrawler.Api;
-using WebCrawler.Domain.Interfaces.Repositories;
-using WebCrawler.Application.Worker;
-using WebCrawler.Infra.Data;
-using WebCrawler.Infra.Repositories;
+using SearchEgnine.Infra.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<WebCrawlerDbContext>(options =>
+builder.Services.AddDbContext<SearchDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDependencies();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHostedService<QueueConsumer>();
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
+builder.WebHost.UseUrls("http://0.0.0.0:5001");
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<WebCrawlerDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<SearchDbContext>();
     db.Database.Migrate();
 }
 
