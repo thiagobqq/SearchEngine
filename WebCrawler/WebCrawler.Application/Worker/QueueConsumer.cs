@@ -20,7 +20,7 @@ namespace WebCrawler.Application.Worker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("QueueConsumer iniciado");
+            _logger.LogInformation("Init QueueConsumer");
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -30,31 +30,26 @@ namespace WebCrawler.Application.Worker
                     
                     if (url != null)
                     {
-                        _logger.LogInformation("Processando URL: {Url}", url);
-                        try
+                        _logger.LogInformation("Processing: {Url}", url);
+                        var page = await WebCrawler.CRAWLER_MANAGER.ProcessPage(url);
+                        if (page != null)
                         {
-                            var page = await WebCrawler.CRAWLER_MANAGER.ProcessPage(url);
-                            if (page != null)
-                            {
-                                await _pageRepository.SavePageAsync(page);
-                            }
-                            else
-                            {
-                                _logger.LogWarning("ProcessPage retornou nulo para a URL: {Url}", url);
-                            }
+                            await _pageRepository.SavePageAsync(page);
+                            _logger.LogInformation("URL saved: {Url}", url);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            _logger.LogError(ex, "Erro ao processar a URL: {Url}", url);
-                            // continue loop — do not let a single failing page stop the background service
-                        }
+                            _logger.LogWarning("Failed to process URL: {Url}", url);
+                        }                       
+                            
+                        
                     }
                 }
 
                 await Task.Delay(500, stoppingToken);
             }
 
-            _logger.LogInformation("QueueConsumer parado");
+            _logger.LogInformation("QueueConsumer stopped");
         }
     }
 }

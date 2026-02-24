@@ -11,7 +11,7 @@ namespace WebCrawler.Application.Manager
 {
     public class CrawlerManager
     {
-        public async Task<PageDTO> ProcessPage(string url)
+        public async Task<PageDTO?> ProcessPage(string url)
         {
             var web = new HtmlWeb();
             try
@@ -31,7 +31,6 @@ namespace WebCrawler.Application.Manager
             }
             catch
             {
-                // Could not load/parse the page (network error, SSL, etc.) — skip this URL
                 return null;
             }
         }
