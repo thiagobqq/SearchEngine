@@ -13,7 +13,6 @@ namespace WebCrawler.Application
 
         static WebCrawler()
         {
-            SPIDER_MANAGER.EnqueueUrl("https://pt.wikipedia.org/wiki/Ovo");
         }
     }
 }

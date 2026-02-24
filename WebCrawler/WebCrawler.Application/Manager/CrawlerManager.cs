@@ -14,19 +14,26 @@ namespace WebCrawler.Application.Manager
         public async Task<PageDTO> ProcessPage(string url)
         {
             var web = new HtmlWeb();
-            var htmlDoc = await web.LoadFromWebAsync(url);
-            var node = htmlDoc.DocumentNode.SelectSingleNode("//head/title");
-            var nodes = htmlDoc.DocumentNode.SelectNodes("//a[@href]");
-
-
-            var content = Regex.Replace(htmlDoc.DocumentNode.InnerText.Trim(), @"\s+", " ");
-            var urls = await ExtractUrls(nodes);
-            return new PageDTO
+            try
             {
-                Url = url,
-                Title = node.InnerText,
-                Content = content
-            };
+                var htmlDoc = await web.LoadFromWebAsync(url);
+                var node = htmlDoc.DocumentNode.SelectSingleNode("//head/title");
+                var nodes = htmlDoc.DocumentNode.SelectNodes("//a[@href]");
+
+                var content = Regex.Replace(htmlDoc.DocumentNode.InnerText.Trim(), @"\s+", " ");
+                var urls = await ExtractUrls(nodes);
+                return new PageDTO
+                {
+                    Url = url,
+                    Title = node != null ? node.InnerText : string.Empty,
+                    Content = content
+                };
+            }
+            catch
+            {
+                // Could not load/parse the page (network error, SSL, etc.) — skip this URL
+                return null;
+            }
         }
 
 

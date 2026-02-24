@@ -9,25 +9,16 @@ namespace WebCrawler.Application.Manager
     public class SpiderManager
     {
         private readonly Queue<string> _urlQueue;
+        private bool Paused = true;
 
         public SpiderManager()
         {
             _urlQueue = new Queue<string>();
         }
 
-        public void EnqueueUrl(string url, bool isVisited)
-        {
-            if (isVisited)
-            {   
-                Console.WriteLine($"Pagina já visitada: {url}");    
-                return;           
-            }
-            _urlQueue.Enqueue(url);            
-        }
-
         public void EnqueueUrl(string url)
         {
-           this.EnqueueUrl(url, false);
+            _urlQueue.Enqueue(url);            
         }
 
 
@@ -55,6 +46,10 @@ namespace WebCrawler.Application.Manager
         {
             return string.Join(Environment.NewLine, _urlQueue);
         }
+
+        public void Pause() => Paused = true;
+        public void Resume() => Paused = false;
+        public bool IsPaused() => Paused;
 
 
         

@@ -10,5 +10,8 @@ namespace WebCrawler.Domain.Interfaces.Repositories
     {
         Task SavePageAsync(PageDTO page);
         Task<bool> IsPageAlreadyVisited(string url);
+        Task<List<PageDTO>> GetAllPagesAsync();
+        Task<List<PageListDTO>> GetPagesListAsync();
+        Task<PageDTO?> GetPageByIdAsync(long id);
     }
 }

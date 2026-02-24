@@ -24,15 +24,30 @@ namespace WebCrawler.Application.Worker
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (WebCrawler.SPIDER_MANAGER.HasUrlsToProcess())
+                if (!WebCrawler.SPIDER_MANAGER.IsPaused() && WebCrawler.SPIDER_MANAGER.HasUrlsToProcess())
                 {
                     var url = WebCrawler.SPIDER_MANAGER.DequeueUrl();
                     
                     if (url != null)
-                    {                        
+                    {
                         _logger.LogInformation("Processando URL: {Url}", url);
-                        var page = await WebCrawler.CRAWLER_MANAGER.ProcessPage(url);
-                        await _pageRepository.SavePageAsync(page);                       
+                        try
+                        {
+                            var page = await WebCrawler.CRAWLER_MANAGER.ProcessPage(url);
+                            if (page != null)
+                            {
+                                await _pageRepository.SavePageAsync(page);
+                            }
+                            else
+                            {
+                                _logger.LogWarning("ProcessPage retornou nulo para a URL: {Url}", url);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Erro ao processar a URL: {Url}", url);
+                            // continue loop — do not let a single failing page stop the background service
+                        }
                     }
                 }
 
