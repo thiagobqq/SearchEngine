@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using EtlService.Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebCrawler.Domain.Interfaces.Repositories;
-using WebCrawler.Domain.ValueObject;
 using WebCrawler.Application.Events;
 using WebCrawler.Application.Manager;
 using WebCrawler.Domain.Events;
@@ -48,19 +48,27 @@ namespace WebCrawler.Application.Worker
                             using var scope = _scopeFactory.CreateScope();
                             var pageRepository = scope.ServiceProvider.GetRequiredService<IPageRepository>();
                             var pageEntity = await pageRepository.SavePageAsync(page);
-                            _logger.LogInformation("URL saved: {Url}", url);
-                            
-                            DomainEventPublisher.Publish(new PageSavedEvent(page.Url, page.Title));
 
-                            await _messagePublisher.PublishPageScrapedAsync(new ScrappedPageObject
+                            if (pageEntity != null)
                             {
-                                PageId = pageEntity.Id,
-                                Url = page.Url,
-                                Title = page.Title,
-                                Content = page.Content,
-                                ContentHash = page.Content?.GetHashCode().ToString() ?? ""
-                            });
-                            
+                                _logger.LogInformation("URL saved: {Url}", url);
+
+                                DomainEventPublisher.Publish(new PageSavedEvent(page.Url, page.Title));
+
+                                await _messagePublisher.PublishPageScrapedAsync(new PageMessage
+                                {
+                                    PageId = pageEntity.Id,
+                                    Url = page.Url,
+                                    Title = page.Title,
+                                    Content = page.Content,
+                                    ContentHash = page.Content?.GetHashCode().ToString() ?? ""
+                                });
+                            }
+                            else
+                            {
+                                _logger.LogWarning("URL already visited, skipping publish: {Url}", url);
+                            }
+
                             var queue = _spiderManager.ListUrls();
                             var queueList = string.IsNullOrEmpty(queue) ? new System.Collections.Generic.List<string>() : new System.Collections.Generic.List<string>(queue.Split(Environment.NewLine));
                             DomainEventPublisher.Publish(new QueueUpdatedEvent(queueList.Count, queueList));

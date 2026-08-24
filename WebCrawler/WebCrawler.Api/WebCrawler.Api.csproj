@@ -10,6 +10,7 @@
     <ProjectReference Include="..\WebCrawler.Application\WebCrawler.Application.csproj" />
     <ProjectReference Include="..\WebCrawler.Domain\WebCrawler.Domain.csproj" />
     <ProjectReference Include="..\WebCrawler.Infra\WebCrawler.Infra.csproj" />
+    <ProjectReference Include="..\..\EtlService\EtlService.Domain\EtlService.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
