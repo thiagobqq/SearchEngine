@@ -17,13 +17,13 @@ Motor de busca pessoal construído (quase) do zero
 
 ## TODO
 
-- [ ] Criar projeto EtlService
-- [ ] Implementar RabbitMQ Publisher no WebCrawler
-- [ ] Implementar TokenizerService
-- [ ] Implementar StemmerService
-- [ ] Implementar IndexingService
-- [ ] Implementar ETL Worker
-- [ ] Criar tabelas SearchTerms, SearchPostings, IndexedPages
+- [x] Criar projeto EtlService
+- [x] Implementar RabbitMQ Publisher no WebCrawler
+- [x] Implementar TokenizerService
+- [x] Implementar StemmerService
+- [x] Implementar IndexingService
+- [x] Implementar ETL Worker
+- [x] Criar tabelas SearchTerms, SearchPostings, IndexedPages
 - [ ] Ajustar SearchEngine para ler do banco indexado
 - [ ] Implementar SearchService com TF-IDF
 - [ ] Implementar SearchController
